@@ -14,6 +14,16 @@
             registerDependencyWatchers(root) {
                 root.$children.forEach(component => {
                     if (this.componentIsDependency(component)) {
+		        if (component.selectedResourceId === undefined) {
+                            var url_string = window.location.href;
+                            var url = new URL(url_string);
+                            var viaResourceId = url.searchParams.get("viaResourceId");
+
+                            if (viaResourceId !== undefined && viaResourceId !== '') {
+                                component.selectedResourceId = viaResourceId;
+                            }
+                        }
+
                         if( component.selectedResourceId !== undefined ) {
                             // BelongsTo field
                             component.$watch('selectedResourceId', this.dependencyWatcher, {immediate: true})
@@ -44,9 +54,7 @@
                 this.dependsOnValue = value
 
                 this.clearSelection()
-				setTimeout(() => {
-	                this.initializeComponent()
-				}, 1000);
+		this.initializeComponent()
             },
         },
 
